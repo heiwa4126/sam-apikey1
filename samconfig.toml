@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "sam-apikey2"
+stack_name = "sam-apikey1"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1avr0ylgvc8ng"
-s3_prefix = "sam-apikey2"
+s3_prefix = "sam-apikey1"
 region = "ap-northeast-1"
 confirm_changeset = false
 capabilities = "CAPABILITY_IAM"
