@@ -5,6 +5,11 @@ Description: >
 
   Sample SAM Template for sam-apikey1
 
+Parameters:
+  StageName:
+    Type: String
+    Default: dev
+
 Globals:
   Function:
     Timeout: 3
@@ -15,6 +20,42 @@ Globals:
     OpenApiVersion: 3.0.3
 
 Resources:
+  ApiGw:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref StageName
+
+  ApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    DependsOn:
+      - ApiGw
+    Properties:
+      UsagePlanName: ExampleUsagePlan1
+      ApiStages:
+        - ApiId: !Ref ApiGw
+          Stage: !Ref StageName
+
+  ApiUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    DependsOn:
+      - ApiKey
+      - ApiUsagePlan
+    Properties:
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan
+
+  ApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    DependsOn:
+      - ApiGw
+    Properties:
+      Name: ExampleApiKey1
+      Enabled: true
+      StageKeys:
+        - RestApiId: !Ref ApiGw
+          StageName: !Ref StageName
+
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -24,10 +65,23 @@ Resources:
         HelloWorld:
           Type: Api
           Properties:
+            RestApiId: !Ref ApiGw
             Path: /hello
             Method: get
+            # Auth:
+            #   ApiKeyRequired: true
+
+  HelloWorldLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: HelloWorldFunction
+    Properties:
+      RetentionInDays: 7
+      LogGroupName: !Join ["", ["/aws/lambda/", !Ref HelloWorldFunction]]
 
 Outputs:
+  ApiKey:
+    Description: API Key Example 1
+    Value: !Ref ApiKey
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ServerlessRestApiProdStage}/hello/"
+    Value: !Sub "https://${ApiGw}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/hello/"
