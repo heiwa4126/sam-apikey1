@@ -29,8 +29,10 @@ Resources:
     Type: AWS::ApiGateway::UsagePlan
     DependsOn:
       - ApiGw
+      - ApiGwStage      # ApiGwが生成するAWS::ApiGateway::Stage
     Properties:
-      UsagePlanName: ExampleUsagePlan1
+      UsagePlanName: !Sub "ExampleUsagePlan-${AWS::StackName}"
+      Description: !Sub "for stack ${AWS::StackName}"
       ApiStages:
         - ApiId: !Ref ApiGw
           Stage: !Ref StageName
@@ -49,8 +51,10 @@ Resources:
     Type: AWS::ApiGateway::ApiKey
     DependsOn:
       - ApiGw
+      - ApiGwStage      # ApiGwが生成するAWS::ApiGateway::Stage
     Properties:
-      Name: ExampleApiKey1
+      Name: !Sub "ExampleApiKey-${AWS::StackName}"
+      Description: !Sub "for stack ${AWS::StackName}"
       Enabled: true
       StageKeys:
         - RestApiId: !Ref ApiGw

@@ -3,7 +3,7 @@
 AWS SAMで
 APIにAPI keyをセットするサンプル。
 
-Lamdaの中身は
+Lamdaの中身はPythonのサンプルのhello worldです。
 
 
 # デプロイ
@@ -53,3 +53,14 @@ pip3 install -U -r requirements.txt
 sam delete
 ```
 で消えます。
+
+
+# 参考
+
+* [AWS Serverless API with API Key - Script Tips by Payton Chertude](https://scripttips.net/aws-serverless-api-with-api-key/)
+* [AWS SAMでAPIキーと使用量プランのリソース作成に失敗する場合の対処方法 - Qiita](https://qiita.com/hayao_k/items/4bee4a27a2b15f19fad8)
+
+
+# メモ
+
+SAMが生成するCFnのAWS::ApiGateway::Stageの名前をDependsOnに指定するのがコツ
