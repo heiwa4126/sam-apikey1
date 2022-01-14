@@ -33,7 +33,7 @@ pip3 install -U -r requirements.txt
 
 すること(`--user`つけるとか適宜アレンジ)
 
-あとは sam deplyごとに
+あとは sam deployごとに
 ```sh
 ./export_config.py
 ```
