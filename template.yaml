@@ -62,14 +62,22 @@ Resources:
       CodeUri: hello_world/
       Handler: app.lambda_handler
       Events:
-        HelloWorld:
+        Hello:
           Type: Api
           Properties:
             RestApiId: !Ref ApiGw
             Path: /hello
             Method: get
+            Auth:
+              ApiKeyRequired: true
+        Hello0:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGw
+            Path: /hello0
+            Method: get
             # Auth:
-            #   ApiKeyRequired: true
+            #   ApiKeyRequired: false
 
   HelloWorldLogGroup:
     Type: AWS::Logs::LogGroup
@@ -79,9 +87,9 @@ Resources:
       LogGroupName: !Join ["", ["/aws/lambda/", !Ref HelloWorldFunction]]
 
 Outputs:
-  ApiKey:
-    Description: API Key Example 1
+  ApiKeyID:
+    Description: Id of API Key Example 1 (not API key)
     Value: !Ref ApiKey
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Hello World function"
-    Value: !Sub "https://${ApiGw}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/hello/"
+    Value: !Sub "https://${ApiGw}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/hello"
