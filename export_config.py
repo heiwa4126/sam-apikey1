@@ -11,12 +11,13 @@ config.sh追加。環境変数版
 """
 
 import json
-import pprint
+
+# import pprint
 
 import boto3
 import toml
 
-PP = pprint.PrettyPrinter(indent=2).pprint
+# PP = pprint.PrettyPrinter(indent=2).pprint
 
 
 def read_samconfig(profile: str = "default") -> dict:
@@ -35,13 +36,20 @@ def main():
     res = CFn.describe_stacks(StackName=sam["stack_name"])
     output = {k["OutputKey"]: k["OutputValue"] for k in res["Stacks"][0]["Outputs"]}
 
+    # API Key IDからapi keyを得る
+    # AWSCLIだと
+    # aws apigateway get-api-key --api-key {ApiKeyID} --include-value
+    AGW = boto3.client("apigateway", region_name=sam["region"])
+    apikey = AGW.get_api_key(apiKey=output["ApiKeyID"], includeValue=True)
+
     # tmp_config.shを作成(TODO:もうすこしなんとかする)
     with open("tmp_config.sh", "w") as f:
         f.write(
             f"""
 StackName={sam["stack_name"]}
 AWS_REGION={sam["region"]}
-ApiKey={output["ApiKey"]}
+ApiKeyID={output["ApiKeyID"]}
+ApiKey={apikey["value"]}
 HelloWorldApi={output["HelloWorldApi"]}
 """
         )
