@@ -2,16 +2,10 @@
 # -*- coding: utf-8 -*-
 """
 毎回stackにアクセスするのが面倒なので
-必要な情報を.config.jsonとして書き出す。
-また
-`sam local invoke HelloWorldFunction -n env.json`
-で使う env.json も書き出す
-
-config.sh追加。環境変数版
+必要な情報を "tmp_config.sh" として書き出す。
 """
 
-import json
-
+# import json
 # import pprint
 
 import boto3
